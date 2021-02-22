@@ -27,21 +27,30 @@ def getRunningBuildList():
         menu.clear()
         print(colored('Running builds\n', 'cyan', attrs=['reverse', 'bold']))
         for build in get_builds_response:
-            print(getBuildDetailsText(build))
+            buildText = getBuildDetailsText(build)
+            if buildText != None:
+                print(getBuildDetailsText(build))
                 
     else:
         print(colored('No build running...', 'yellow', attrs=['bold']))
 
 def getBuildDetailsText(build):
     text = ''
-    if len(build.trigger_info):
+
+    if build.reason == 'individualCI':
+        return None
+
+    if len(build.trigger_info) and 'pr.title' in build.trigger_info:
         text += menu.buildBox(str(build.id), ' ' + build.trigger_info['pr.title'])
         text += colored(' batched for ', 'yellow')
         text += build.trigger_info['pr.sender.name']
     else:
-        text += menu.buildBox('#' + str(build.id), ' ' + build.repository.id)
-        text += colored(' manually started by ', 'yellow')
+        text += menu.buildBox(str(build.id), ' ' + build.repository.id)
+        text += colored(' started by ', 'yellow')
         text += build.requested_by.display_name
+    
+    text += ' (' + colored(build.definition.name, 'white', attrs=['reverse']) + ')'
+
     return text
 
 
