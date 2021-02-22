@@ -8,3 +8,6 @@ Edit config.py to set your Azure personal access token. You can find how to crea
 ```Console
 python app.py
 ```
+
+#### disclaimer
+This console helper is made for fun... some builds triggered by the pipeline may crash the app for the moment. some love will be added later.
